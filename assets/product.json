@@ -1,0 +1,17 @@
+{
+  "products": [
+    {
+      "id": 0,
+      "title": "mclovin shirt",
+      "description": "this computer har vairus mclovin shirt in the world cup 2022",
+      "code": "G2G2",
+      "price": "6000",
+      "status": "true",
+      "stock": "14",
+      "category": "shirts",
+      "thumbnail": [
+        "https://http2.mlstatic.com/D_NQ_NP_911746-MLA52841912652_122022-O.webp"
+      ]
+    }
+  ]
+}
