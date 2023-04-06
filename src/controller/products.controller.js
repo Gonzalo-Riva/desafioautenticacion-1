@@ -1,70 +1,57 @@
-const ProductManager = require("../dao/fsManager/ProductManager");
-const Product = new ProductManager('./assets/product.json');
+const BdProductManager = require('../dao/mongoManager/BdProductManager');
+const { ProductRepository } = require('../service/index.repository');
 
 const getProducts = async (req, res) => {
-  const {limit: limite = ""} = req.query;
-  if (!limite) {
-    let productos = await Product.getProducts();
-    if (productos.length == 0){
-      res.json({msg:"No Hay Productos"});
-    }else{
-      res.json(productos);
-    }
-  } else{
-    let productos = await Product.getProducts(limite);
-     res.json(productos);
-
+  const { limit, page, sort, ...query } = req.query;
+  const products = await ProductRepository.get(page, limit, sort, query);
+  const { docs } = products;
+  const state = products ? 'success' : 'error';
+  if (products) {
+    res.json({ ...products, status: state, payload: docs });
+  } else {
+    res.json(products);
+  }
+};
+const addProduct = async (req, res) => {
+  const product = req.body;
+  const newproduct = await ProductRepository.add(product);
+  if (newproduct) {
+    res.json(newproduct);
+  } else {
+    res.json(newproduct);
   }
 };
 
-
-
-const getProductId = async (req , res)=>{
-  const pid = req.params.pid
-  let product = await Product.getProductById(pid);
-   if (!product){
-      res.json("product no encontrado")    
-   } else{
-       res.json(product)  
- 
-
-   }
-}   
-
-const addProduct = async (req , res)=>{
-    const body = req.body;
-    const add = await Product.addProduct(body);
-    if (add.erro){
-      res.json(add)
-    }else{
-      res.json(add);
-    }
-
-}
-
-const  UpdateProduct = async (req, res)=>{
-    const id = +req.params.pid  
-    const body = req.body
-    const update = await Product.UpdateProduct(id, body);
-    if (update){
-      res.json(update)
-    }else{
-      res.json(update);
-    }
-
-}
-
-const deleteProduct = async (req, res)=>{
-  const id = +req.params.pid 
-  const Delete = await Product.deleteProduct (id);
-  if (Delete.erro){
-    res.json(Delete);
-  }else{
-    res.json(Delete);
+const getProductId = async (req, res) => {
+  const id = req.params.pid;
+  const getProductId = await ProductRepository.getId(id);
+  if (getProductId) {
+    res.json(getProductId);
+  } else {
+    res.json(getProductId);
   }
+};
 
-}
+const UpdateProduct = async (req, res) => {
+  const id = req.params.pid;
+  const product = req.body;
+  const UpdateProductId = await BdProductManager.UpdateProduct(id, product);
+  if (UpdateProductId) {
+    res.json(UpdateProductId);
+  } else {
+    res.json(UpdateProductId);
+  }
+};
 
+const deleteProduct = async (req, res) => {
+  const id = req.params.pid;
+  const deleteproduct = await BdProductManager.DeleteProductId(id);
+  if (deleteproduct) {
+    res.json(deleteproduct);
+  } else {
+    res.json(deleteproduct);
+  }
+};
 
 module.exports = {
   getProducts,

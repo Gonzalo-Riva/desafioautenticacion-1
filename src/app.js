@@ -1,3 +1,4 @@
+
 const express = require('express');
 const { Server } = require('socket.io');
 const { connectionSocket } = require('./utils/soket.io');
@@ -16,16 +17,17 @@ const cookieParser = require('cookie-parser');
 const mongoconnect = require('connect-mongo');
 const mongoose = require('mongoose');
 const productModel = require('./dao/models/products.model');
-const { PORT } = require('./utils/constants');
 const { init } = require('./dao/models/users.model');
 const { initPassaport } = require('./utils/passport.config');
 const passport = require('passport');
 
+require('dotenv').config();
+
 mongoose.set('strictQuery', false);
 
 // const FileStorage = FileStore(session);
-const httpServer = server.listen(8080, () => {
-  console.log(PORT);
+const httpServer = server.listen(process.env.PORT, () => {
+  console.log(process.env.PORT);
 });
 
 //handlerbars
@@ -40,11 +42,10 @@ server.use(cookieParser());
 server.use(express.static(__dirname + '/public'));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-
 server.use(
   session({
     store: mongoconnect.create({
-      mongoUrl: 'mongodb+srv://root:uhxZm0JJ5P6Iy90Y@cluster0.kejfql2.mongodb.net/test?retryWrites=true&w=majority',
+      mongoUrl: process.env.MONGO_URL,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 60 * 60,
     }),
@@ -69,7 +70,7 @@ server.use('/api/cartsBd/', cartsRouteBd);
 server.use('/api/chats/', chatsRouter);
 
 const test = async () => {
-  await mongoose.connect('mongodb+srv://root:uhxZm0JJ5P6Iy90Y@cluster0.kejfql2.mongodb.net/test?retryWrites=true&w=majority');
+  await mongoose.connect(process.env.MONGO_URL);
   console.log('Su conexion a la base fue exitosa');
 };
 
