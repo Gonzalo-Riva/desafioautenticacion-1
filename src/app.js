@@ -2,14 +2,8 @@
 const express = require('express');
 const { Server } = require('socket.io');
 const { connectionSocket } = require('./utils/soket.io');
+const router = require('./routes/index.router');
 const handlebars = require('express-handlebars');
-const productsRoute = require('./routes/products.routes');
-const cardsRoute = require('./routes/carts.routes');
-const productsRouteBd = require('./routes/products.router.bd');
-const cartsRouteBd = require('./routes/carts.router.bd');
-const viewRoute = require('./routes/views.route');
-const routerSession = require('./routes/session.router');
-const chatsRouter = require('./routes/chats.router');
 const server = express();
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -60,14 +54,8 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 //rutas
+server.use('/', router);
 
-server.use('/api/products/', productsRoute);
-server.use('/api/carts/', cardsRoute);
-server.use('/', viewRoute);
-server.use('/api/session/', routerSession);
-server.use('/api/productsBd/', productsRouteBd);
-server.use('/api/cartsBd/', cartsRouteBd);
-server.use('/api/chats/', chatsRouter);
 
 const test = async () => {
   await mongoose.connect(process.env.MONGO_URL);

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const userCollection = 'users';
 
+const roles = ['admin', 'user'];
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -20,7 +22,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  rol: String,
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'carts',
+  },
+  role: {
+    type: String,
+    enum: roles,
+    required: true,
+    default: 'user',
+  },
 });
 
 const userModel = mongoose.model(userCollection, userSchema);
